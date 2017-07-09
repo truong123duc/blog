@@ -6,7 +6,9 @@ var methodOverride = require("method-override");
 var expresSanitizer = require("express-sanitizer");
 
 //APP CONFIG
-mongoose.connect("mongodb://ductruong:123456@ds151662.mlab.com:51662/blog-demo");
+var url = process.env.DATABASEURL || "mongodb://localhost/blog-demo";
+mongoose.connect(url);
+// mongoose.connect("mongodb://ductruong:123456@ds151662.mlab.com:51662/blog-demo");
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
@@ -16,7 +18,7 @@ app.use(methodOverride("_method"));
 var blogSchema = new mongoose.Schema({
    title: String,
    image: String,
-   body: String,
+   content: String,
    created: {type: Date, default: Date.now}
 });
 var Blog = mongoose.model("Blog", blogSchema);
@@ -41,7 +43,7 @@ app.get("/blogs/new", function(req, res){
 //CREATE ROUTE
 app.post("/blogs", function(req, res){
    //create blog
-   req.body.blog.body = req.sanitze();
+   req.body.blog.content = req.sanitize(req.body.blog.content);
    Blog.create(req.body.blog, function(err, newBlog){
        if(err){
            res.render("new");
@@ -73,7 +75,7 @@ app.get("/blogs/:id/edit", function(req, res){
 });
 //UPDATE ROUTE
 app.put("/blogs/:id", function(req, res){
-    req.body.blog.body = req.sanitze();
+    req.body.blog.content = req.sanitize(req.body.blog.content);
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
         if(err){
             res.redirect("/blogs");
