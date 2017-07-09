@@ -6,7 +6,7 @@ var methodOverride = require("method-override");
 var expresSanitizer = require("express-sanitizer");
 
 //APP CONFIG
-mongoose.connect("mongodb://<truong123duc>:<Anhduc12>@ds151662.mlab.com:51662/blog-demo");
+mongoose.connect("mongodb://ductruong:123456@ds151662.mlab.com:51662/blog-demo");
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
